@@ -51,13 +51,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (leftEdge) direction = 1 // They are asked to move the other way - right if they are on the left edge...
             else direction = -1 // Left if they are on the right edge
         }
-        for (let i = 0; i <= alienInvaders.length -1; i++) {
+        for (let i = 0; i <= alienInvaders.length -1; i++) { // The aliens are removed as they are moving from one side to the other
             squares[alienInvaders[i]].classList.remove('invader')
         }
-        for (let i = 0; i <= alienInvaders.length -1; i++) {
+        for (let i = 0; i <= alienInvaders.length -1; i++) { // The aliens direction is updated every interval in order to make them move
             alienInvaders[i] += direction
         }
-        for (let i = 0; i <= alienInvaders.length -1; i++) {
+        for (let i = 0; i <= alienInvaders.length -1; i++) { // "New" aliens are added in order to make the alien army move from side to side
             if (!alienInvadersTakenDown.includes(i)) {
                 squares[alienInvaders[i]].classList.add('invader')
             }
