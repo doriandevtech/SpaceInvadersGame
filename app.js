@@ -14,9 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Define the alien invaders positions
     const alienInvaders = [
-        0,1,2,3,4,5,6,7,8,9,
-        15,16,17,18,19,20,21,22,23,24,
-        30,31,32,33,34,35,36,37,38,39
+        0,1,2,3,4,5,6,7,8,9, // 1st line of 10 aliens
+        15,16,17,18,19,20,21,22,23,24, // 2nd line of 10 aliens
+        30,31,32,33,34,35,36,37,38,39 // 3rd line of 10 aliens
     ]
 
     // Draw the alien invaders inside the squares define earlier
@@ -58,75 +58,68 @@ document.addEventListener('DOMContentLoaded', () => {
             alienInvaders[i] += direction
         }
         for (let i = 0; i <= alienInvaders.length -1; i++) { // "New" aliens are added in order to make the alien army move from side to side
-            if (!alienInvadersTakenDown.includes(i)) {
-                squares[alienInvaders[i]].classList.add('invader')
+            if (!alienInvadersTakenDown.includes(i)) { // If aliens are not taken down then...
+                squares[alienInvaders[i]].classList.add('invader') // "New" aliens are added in order to make the pack move
             }
         }
 
         // Decide that the game is over
-        if (squares[currentShooterIndex].classList.contains('invader', 'shooter')) {
-            resultDisplay.textContent = 'Game Over'
-            squares[currentShooterIndex].classList.add('boom')
-            clearInterval(invaderId)
+        if (squares[currentShooterIndex].classList.contains('invader', 'shooter')) { // If an invader position equald the shooter's one then it's game over
+            resultDisplay.textContent = 'Game Over' // This mesage is displayed
+            squares[currentShooterIndex].classList.add('boom') // The class 'boom' is added to the shooter's position for some animation
+            clearInterval(invaderId) // Aliens do not move anymore
         }
 
         for (let i = 0; i <= alienInvaders.length -1; i++) {
-            // If the aliens missed the shooter but touched the bottom of the grid then the games is over
-            if (alienInvaders[i] > (squares.length - (width-1))) {
-                resultDisplay.textContent = 'Game Over'
-                clearInterval(invaderId)
+            if (alienInvaders[i] > (squares.length - (width-1))) { // If the aliens missed the shooter but touched the bottom of the grid then the games is over
+                resultDisplay.textContent = 'Game Over' // This mesage is displayed
+                clearInterval(invaderId) // Aliens do not move anymore
             }
         }
 
         // Decide a win
-        if (alienInvadersTakenDown.length === alienInvaders.length) {
-            resultDisplay.textContent = 'You Win'
-            clearInterval(invaderId)
+        if (alienInvadersTakenDown.length === alienInvaders.length) { // If the taken down aliens list's length equals the alien one then it's a win
+            resultDisplay.textContent = 'You Win' // This mesage is displayed
+            clearInterval(invaderId) // Not move are usefull now
         }
     }
 
-    invaderId = setInterval(moveInvaders, 500)
-
+    invaderId = setInterval(moveInvaders, 500) // Set the interval with calling moveInvaders() and setting an interval of 500ms
 
     // Shoot at aliens
     function shoot(e) {
-        let laserId
-        let currentLaserIndex = currentShooterIndex
+        let laserId // Define the let varibale for the laser blaster
+        let currentLaserIndex = currentShooterIndex // Make the laser blaster leave from the shooter's current position
+
         // Move the laser from the shooter to the alien Invader
         function moveLaser() {
-            squares[currentLaserIndex].classList.remove('laser')
-            currentLaserIndex -= width
-            squares[currentLaserIndex].classList.add('laser')
+            squares[currentLaserIndex].classList.remove('laser') // Remove the laser icon from the current position
+            currentLaserIndex -= width // Make it go one square up
+            squares[currentLaserIndex].classList.add('laser') // Add the laser to thus new square
 
-            if (squares[currentLaserIndex].classList.contains('invader')) {
-                squares[currentLaserIndex].classList.remove('laser')
-                squares[currentLaserIndex].classList.remove('invader')
-                squares[currentLaserIndex].classList.add('boom')
+            if (squares[currentLaserIndex].classList.contains('invader')) { // If the laser meets with an invader
+                squares[currentLaserIndex].classList.remove('laser') // Remove the laser icon
+                squares[currentLaserIndex].classList.remove('invader') // Remove the alien icon
+                squares[currentLaserIndex].classList.add('boom') // Add a 'boom' effect to this collision
 
-                setTimeout(() => squares[currentLaserIndex].classList.remove('boom'), 250)
-                clearInterval(laserId)
+                setTimeout(() => squares[currentLaserIndex].classList.remove('boom'), 250) // The 'boom' effect last for 250ms after the blast and then fades out
+                clearInterval(laserId) // The laser id is reset in order to shoot an other laser from the shooter's position without errors
 
-                const alienTakenDown = alienInvaders.indexOf(currentLaserIndex)
-                alienInvadersTakenDown.push(alienTakenDown)
-                result++
-                resultDisplay.textContent = result
+                const alienTakenDown = alienInvaders.indexOf(currentLaserIndex) // The aline taken down lists refers to aliens that met with a laser blast
+                alienInvadersTakenDown.push(alienTakenDown) // New aliens taken down are added to the list
+                result++ // Points are added to the player's score
+                resultDisplay.textContent = result // The points displays is updated
             }
 
-            if (currentLaserIndex < width) {
-                clearInterval(laserId)
-                setTimeout(() => squares[currentLaserIndex].classList.remove('laser'), 100)
+            if (currentLaserIndex < width) { // If the laser blast arrives at the top edge of the play area then...
+                clearInterval(laserId) // The laser id is reset in order to shoot an other laser from the shooter's position without errors
+                setTimeout(() => squares[currentLaserIndex].classList.remove('laser'), 100) // The laser blaster is removed from the play area
             }
         }
 
-        // document.addEventListener('keyup', e => {
-        //     if (e.keyCode === 32) {
-        //         laserId = setInterval(moveLaser, 100)
-        //     }
-        // })
-
         switch(e.keyCode) {
-            case 32:
-                laserId = setInterval(moveLaser, 100)
+            case 32: // If the space bar is pressed then...
+                laserId = setInterval(moveLaser, 100) // A laser blast is shot, the highest rate being one shoot per 100ms
                 break
         }
     }
