@@ -1,5 +1,10 @@
 // EventListener executed when the web page is loaded
 document.addEventListener('DOMContentLoaded', () => {
+
+    // **************************************
+    // BUILDING OF THE INTERFACE AND ITS BODY
+    // **************************************
+
     const squares = document.querySelectorAll('.grid div') // Define "squares" as all the "grid div" class
     const resultDisplay = document.querySelector('#result') // Define "resultDisplay" as the element with the id "result"
 
@@ -24,6 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Draw the shooter
     squares[currentShooterIndex].classList.add('shooter')
+
+    // ***************************************
+    // CORE OF THE APPLICATION - THE FUNCTIONS
+    // ***************************************
 
     // Move the shooter along a line
     function moveShooter(e) {
@@ -65,21 +74,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Decide that the game is over
         if (squares[currentShooterIndex].classList.contains('invader', 'shooter')) { // If an invader position equald the shooter's one then it's game over
-            resultDisplay.textContent = 'Game Over' // This mesage is displayed
+            resultDisplay.textContent = 'Game Over' // This message is displayed
             squares[currentShooterIndex].classList.add('boom') // The class 'boom' is added to the shooter's position for some animation
             clearInterval(invaderId) // Aliens do not move anymore
         }
 
         for (let i = 0; i <= alienInvaders.length -1; i++) {
             if (alienInvaders[i] > (squares.length - (width-1))) { // If the aliens missed the shooter but touched the bottom of the grid then the games is over
-                resultDisplay.textContent = 'Game Over' // This mesage is displayed
+                resultDisplay.textContent = 'Game Over' // This message is displayed
                 clearInterval(invaderId) // Aliens do not move anymore
             }
         }
 
         // Decide a win
         if (alienInvadersTakenDown.length === alienInvaders.length) { // If the taken down aliens list's length equals the alien one then it's a win
-            resultDisplay.textContent = 'You Win' // This mesage is displayed
+            resultDisplay.textContent = 'You Win' // This message is displayed
             clearInterval(invaderId) // Not move are usefull now
         }
     }
